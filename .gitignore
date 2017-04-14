@@ -1,0 +1,12 @@
+# IDEA #
+.idea
+*.iml
+
+.project
+.classpath
+.settings/
+maven-eclipse.xml
+target/
+bin/
+.DS_Store
+*.txt
