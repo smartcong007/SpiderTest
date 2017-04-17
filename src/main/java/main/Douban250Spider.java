@@ -14,13 +14,13 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * Created by dasouche on 2017/4/14.
+ * Created by zhengcong on 2017/4/14.
  */
 public class Douban250Spider {
 
-    private static LinkedList<String> resolvedList;
+    private static LinkedList<String> resolvedList;   //存放待解析网页路径的队列
 
-    private static final String homeUrl = "https://movie.douban.com/top250";
+    private static final String homeUrl = "https://movie.douban.com/top250";   //给定初始页
 
     private static FileWriter fw;
 
@@ -52,10 +52,10 @@ public class Douban250Spider {
 
     }
 
-    public static void crawlwe(String url){
+    public static void crawlwe(String url){    //对给定链接的网页进行解析，获取需要的部分
 
         try {
-            Document doc = Jsoup.connect(url).cookies(cookies)
+            Document doc = Jsoup.connect(url).cookies(cookies)       //为了避免豆瓣对反复爬取网页行为的ip进行拦截，所以借助cookie冒充登录用户即可，有待优化
                     .get();
 
 
