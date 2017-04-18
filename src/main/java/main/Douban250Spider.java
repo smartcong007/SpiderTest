@@ -24,7 +24,7 @@ public class Douban250Spider {
 
     private static FileWriter fw;
 
-    private static Map<String,String> cookies;
+    private static Map<String,String> cookies;     //cookies用于对付豆瓣的反爬
 
     private static  final String cookie = "ll=\"118172\"; bid=gfFuWV33eMI; ps=y; ue=\"cong99299618@hotmail.com\"; dbcl2=\"76578935:RBoNAdqQqyQ\"; ck=RJkR; ap=1; push_noty_num=0; push_doumail_num=0; _vwo_uuid_v2=2AB55A255694C691F4AC27222082FCBF|6894aba1ec2b204bebe44d712191ce96; __utma=30149280.1026275788.1492169340.1492169340.1492174928.2; __utmb=30149280.3.10.1492174928; __utmc=30149280; __utmz=30149280.1492169340.1.1.utmcsr=baidu|utmccn=(organic)|utmcmd=organic";
 
