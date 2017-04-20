@@ -3,6 +3,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -50,6 +55,39 @@ public class TestDemo {
 
     @Test
     public void test2(){
+
+        System.setProperty("webdriver.chrome.driver", "/Users/dasouche/Downloads/chromedriver 2");
+
+        WebDriver webDriver = new ChromeDriver();
+
+        webDriver.get("https://www.douban.com/");
+
+
+        WebElement we = webDriver.findElement(By.id("form_email"));
+
+        we.sendKeys("cong99299618@hotmail.com");
+
+        WebElement we2 = webDriver.findElement(By.id("form_password"));
+
+        we2.sendKeys("W#6erm9");
+
+        WebElement sub = webDriver.findElement(By.className("bn-submit"));
+
+        sub.click();
+
+        Set<Cookie> cookie = webDriver.manage().getCookies();
+
+        Map<String,String> cookies = new HashMap<String, String>();
+
+        for(Cookie c:cookie){
+
+            cookies.put(c.getName(),c.getValue());
+
+        }
+
+        System.out.println(cookies.toString());
+
+        webDriver.quit();
 
     }
 

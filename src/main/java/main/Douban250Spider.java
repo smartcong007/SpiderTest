@@ -6,12 +6,15 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by zhengcong on 2017/4/14.
@@ -20,33 +23,40 @@ public class Douban250Spider {
 
     private static LinkedList<String> resolvedList;   //存放待解析网页路径的队列
 
+    private static List<String> failedList = new ArrayList<>();  //存放抓取失败的网页路径
+
     private static final String homeUrl = "https://movie.douban.com/top250";   //给定初始页
 
     private static FileWriter fw;
 
     private static Map<String,String> cookies;     //cookies用于对付豆瓣的反爬
 
-    private static  final String cookie = "ll=\"118172\"; bid=gfFuWV33eMI; ps=y; ue=\"cong99299618@hotmail.com\"; dbcl2=\"76578935:RBoNAdqQqyQ\"; ck=RJkR; ap=1; push_noty_num=0; push_doumail_num=0; _vwo_uuid_v2=2AB55A255694C691F4AC27222082FCBF|6894aba1ec2b204bebe44d712191ce96; __utma=30149280.1026275788.1492169340.1492169340.1492174928.2; __utmb=30149280.3.10.1492174928; __utmc=30149280; __utmz=30149280.1492169340.1.1.utmcsr=baidu|utmccn=(organic)|utmcmd=organic";
 
-    static {
+    public Douban250Spider(String filepath,String accout,String pass){
 
+        init(filepath,accout,pass);
+
+    }
+
+    public void init(String filepath,String accout,String pass){
+
+        //初始化待抓取网页链接队列
         resolvedList = new LinkedList<String>();
         for(int i = 0; i < 10; i ++){
             resolvedList.add(homeUrl+"?start="+i*25+"&filter=");
         }
 
+        //初始化本地存储抓取结果的文件路径
         try {
-            fw = new FileWriter("douban.txt");
+            fw = new FileWriter(filepath);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        cookies = new HashMap<String, String>();
-        String s[] = cookie.split("; ");
-        for(String s1:s){
+        //初始化cookies,需要调用方提供自己在豆瓣的账号密码
+        if(cookies.size() == 0){
 
-            String temp[] = s1.split("=");
-            cookies.put(temp[0],temp[1]);
+            autoSetCookies(accout,pass);
 
         }
 
@@ -144,16 +154,77 @@ public class Douban250Spider {
 
             }
         } catch (IOException e) {
-            e.printStackTrace();
+
+            String error = e.toString();
+            if(error.contains("Status=404")){
+
+                failedList.add(error.substring(error.indexOf("URL=")+4));  //记录下可能抓取失败的电影详情页
+
+            }
+
         }
 
     }
 
-    public static void main(String[] args) {
+    public static void autoSetCookies(String account,String pass){
+
+        System.out.println("****** automatically get your cookies from douban! ******");
+
+        System.setProperty("webdriver.chrome.driver", "/Users/dasouche/Downloads/chromedriver 2");
+
+        WebDriver webDriver = new ChromeDriver();
+
+        webDriver.get("https://www.douban.com/");
+
+
+        WebElement we = webDriver.findElement(By.id("form_email"));
+
+        we.sendKeys(account);
+
+        WebElement we2 = webDriver.findElement(By.id("form_password"));
+
+        we2.sendKeys(pass);
+
+        WebElement sub = webDriver.findElement(By.className("bn-submit"));
+
+        sub.click();
+
+        Set<Cookie> cookie = webDriver.manage().getCookies();
+
+        Map<String,String> cookies = new HashMap<String, String>();
+
+        for(Cookie c:cookie){
+
+            cookies.put(c.getName(),c.getValue());
+
+        }
+
+        System.out.println("cookies :"+cookies.toString());
+
+        webDriver.quit();
+
+    }
+
+    public void spider() {
+
+        System.out.println("spider beginning.......");
 
         while (resolvedList.size()>0){
             String url = resolvedList.poll();
             crawlwe(url);
+        }
+
+        System.out.println("spider finished......");
+
+        if(failedList.size()>0){
+
+            System.out.println("The failed items are listed below:");
+            for(String s:failedList){
+
+                System.out.println(s);
+
+            }
+
         }
 
     }
