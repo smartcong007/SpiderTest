@@ -11,6 +11,7 @@ import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import util.DialogUtil;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,16 +30,16 @@ public class Douban250Spider {
 
     private static FileWriter fw;
 
-    private static Map<String,String> cookies;     //cookies用于对付豆瓣的反爬
+    private static Map<String,String> cookies = new HashMap<>();     //cookies用于对付豆瓣的反爬
 
 
-    public Douban250Spider(String filepath,String accout,String pass){
+    public Douban250Spider(String filepath){
 
-        init(filepath,accout,pass);
+        init(filepath);
 
     }
 
-    public void init(String filepath,String accout,String pass){
+    public void init(String filepath){
 
         //初始化待抓取网页链接队列
         resolvedList = new LinkedList<String>();
@@ -55,7 +56,8 @@ public class Douban250Spider {
 
         //初始化cookies,需要调用方提供自己在豆瓣的账号密码
         if(cookies.size() == 0){
-
+            String accout = DialogUtil.showInputDialog("请输入您的豆瓣账号!");
+            String pass = DialogUtil.passwordDialog("请输入您的豆瓣密码!");
             autoSetCookies(accout,pass);
 
         }
