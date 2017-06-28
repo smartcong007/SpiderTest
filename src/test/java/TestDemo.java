@@ -33,12 +33,8 @@ public class TestDemo {
                 result.put(version, Integer.valueOf(temp));
 
             }
-            List<Map.Entry<String, Integer>> list = new ArrayList<Map.Entry<String, Integer>>(result.entrySet());
-            Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
-                public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-                    return o1.getValue().compareTo(o2.getValue());
-                }
-            });
+            List<Map.Entry<String, Integer>> list = new ArrayList<>(result.entrySet());
+            Collections.sort(list, Comparator.comparing(Map.Entry::getValue));
             FileWriter fw = new FileWriter(new File("test.txt"));
             for (Map.Entry<String, Integer> m : list) {
                 System.out.printf("版本号【%s】使用量为 %d",m.getKey(),m.getValue());
