@@ -50,6 +50,12 @@
             <version>2.52.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.cong</groupId>
+            <artifactId>Scrawler</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
 
 
     </dependencies>

@@ -1,9 +1,12 @@
+import com.cong.selenium.SeleniumBase;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -52,10 +55,19 @@ public class TestDemo {
     @Test
     public void test2(){
 
-        System.setProperty("webdriver.chrome.driver", "/Users/dasouche/Downloads/chromedriver 2");
-        ChromeDriver webDriver = new ChromeDriver();
-        webDriver.get("https://www.baidu.com");
+        WebDriver driver = SeleniumBase.getCurrentDriver();
+        SeleniumBase.openPage("https://www.baidu.com", new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                return webDriver.findElement(By.id("su")) != null;
+            }
+        },15);
+        SeleniumBase.takeScreenShot();
+        SeleniumBase.quitDriver();
+
 
     }
+
+
 
 }
